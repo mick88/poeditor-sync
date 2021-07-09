@@ -15,11 +15,13 @@ def poeditor(config_file, token):
 
 @poeditor.command('push-terms')
 @option('--language-code', default=None, help="Select language that has the complete list of terms to update")
-@argument('overwrite', default=False, help="Whether translations should be overwritten")
-@argument('sync-terms', default=False, help="Whether to delete terms that are not present in pushed language")
+@argument('overwrite', default=False)
+@argument('sync-terms', default=False)
 def push_terms(language_code: str, overwrite: bool, sync_terms: bool):
     """
     Uploads list of terms in your local project to POEditor.
+    overwrite - Whether translations should be overwritten
+    sync-terms - Whether to delete terms that are not present in pushed language
     """
     for project in config['projects']:
         language = language_code or project.get('default_language', 'en')
