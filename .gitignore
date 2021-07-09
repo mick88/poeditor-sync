@@ -1,0 +1,10 @@
+# created by virtualenv automatically
+/src/
+/Lib/
+pyvenv.cfg
+*.pyc
+/scripts/
+/.idea/
+*.egg-info
+/example/*.po/
+/example/*.xml/
