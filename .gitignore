@@ -6,5 +6,5 @@ pyvenv.cfg
 /scripts/
 /.idea/
 *.egg-info
-/example/*.po/
-/example/*.xml/
+/example/*.po
+/example/*.xml
