@@ -12,7 +12,7 @@ setup(
     packages=['poeditor_sync'],
     py_modules=['cmd'],
     entry_points={
-        'console_scripts': ['poeditor = cmd:poeditor'],
+        'console_scripts': ['poeditor = poeditor_sync.cmd:poeditor'],
     },
     url='https://github.com/mick88/poeditor-sync',
     license='MIT',
