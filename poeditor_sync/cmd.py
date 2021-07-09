@@ -1,5 +1,3 @@
-import os
-
 from click import option, echo, group, argument, File, Choice, STRING
 from poeditor.client import POEditorAPI
 
@@ -7,8 +5,8 @@ from poeditor_sync.sync import get_client, get_config
 
 
 @group()
-@option('--config-file', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=File())
-@option('--token', envvar='POEDITOR_TOKEN', type=STRING)
+@option('--config-file', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=File(), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
+@option('--token', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
 def poeditor(config_file, token):
     global client, config
     config = get_config(config_file)
@@ -16,10 +14,13 @@ def poeditor(config_file, token):
 
 
 @poeditor.command('push-terms')
-@option('--language-code', default=None)
-@argument('overwrite', default=False)
-@argument('sync-terms', default=False)
+@option('--language-code', default=None, help="Select language that has the complete list of terms to update")
+@argument('overwrite', default=False, help="Whether translations should be overwritten")
+@argument('sync-terms', default=False, help="Whether to delete terms that are not present in pushed language")
 def push_terms(language_code: str, overwrite: bool, sync_terms: bool):
+    """
+    Uploads list of terms in your local project to POEditor.
+    """
     for project in config['projects']:
         language = language_code or project.get('default_language', 'en')
         name = client.view_project_details(project_id=project['id']).get('name')
@@ -36,6 +37,9 @@ def push_terms(language_code: str, overwrite: bool, sync_terms: bool):
 @argument('overwrite', default=False)
 @argument('sync-terms', default=False)
 def push_translations(overwrite: bool, sync_terms: bool):
+    """
+    Upload local translations to poeditor
+    """
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pushing {name} translations...", nl=False)
@@ -52,6 +56,9 @@ def push_translations(overwrite: bool, sync_terms: bool):
 @poeditor.command('pull')
 @argument('filters', type=Choice(POEditorAPI.FILTER_BY), required=False, nargs=-1)
 def pull_translations(filters: tuple[str]):
+    """
+    Download translated strings
+    """
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pulling {name} translations...", nl=False)
