@@ -18,7 +18,7 @@ poeditor push-terms --sync-terms --overwrite
 ```
 
 ### Configuration
-Create a config file `poeditor.yml` to link your project with a POEditor project and define paths to translation files. For example.
+Create a config file `poeditor.yml` to link your project with a POEditor project and define paths to translation files. Multiple projects are supported.
 ```yml
 api_token: ABC123...
 projects:
@@ -26,8 +26,22 @@ projects:
     format: po
     default_language: en
     terms:
-      en: locale/en/LC_MESSAGES/django.js
-      pl: locale/pl/LC_MESSAGES/django.js
+      en: locale/en/LC_MESSAGES/django.po
+      pl: locale/pl/LC_MESSAGES/django.po
+  - id: 54321
+    format: po
+    default_language: en
+    terms:
+      en: locale/en/LC_MESSAGES/djangojs.po
+      pl: locale/pl/LC_MESSAGES/djangojs.po
 
 ```
-The API token in your config file can be a read-only token. You can use a separate token for uploads and pass it using `--token` option or `POEDITOR_TOKEN` environment variable.
+If you're planning to check the file into your code repository or share it with someone the API token in your config file can be a read-only token. 
+You can use a separate token for uploads and pass it using `--token` option or `POEDITOR_TOKEN` environment variable.
+
+### Options
+
+| Option          | environment variable   | default value | documentation |
+|-----------------|------------------------|---------------|---------------|
+| `--token`       | `POEDITOR_TOKEN`       |               | Authentication token for POEditor
+| `--config-file` | `POEDITOR_CONFIG_FILE` | poeditor.yml  | Path to the project config file
