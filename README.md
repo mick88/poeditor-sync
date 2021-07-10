@@ -39,7 +39,7 @@ projects:
       pl: locale/pl/LC_MESSAGES/djangojs.po
 
 ```
-If you're planning to check the file into your code repository or share it with someone the API token in your config file can be a read-only token. 
+If you're planning to commit the config file into your repository or share it with someone, it is recommend that the API token in your config file be a read-only token. 
 You can use a separate token for uploads and pass it using `--token` option or `POEDITOR_TOKEN` environment variable.
 
 ### Options
