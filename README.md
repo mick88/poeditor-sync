@@ -37,6 +37,7 @@ projects:
   - id: 54321
     format: po
     default_language: en
+    terms_path: locale/{language_code}/LC_MESSAGES/djangojs.po
     terms:
       en: locale/en/LC_MESSAGES/djangojs.po
       pl: locale/pl/LC_MESSAGES/djangojs.po
