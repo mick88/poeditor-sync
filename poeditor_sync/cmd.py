@@ -59,7 +59,6 @@ def push_translations(overwrite: bool, sync_terms: bool):
                 overwrite=overwrite,
                 sync_terms=sync_terms,
             )
-            echo('✔', nl=False)
         echo('')
 
 
