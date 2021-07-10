@@ -1,3 +1,4 @@
+from time import sleep
 from typing import Sequence
 
 from click import option, echo, group, argument, File, Choice, STRING
@@ -42,12 +43,15 @@ def push_terms(language_code: str, overwrite: bool, sync_terms: bool):
 @argument('sync-terms', default=False)
 def push_translations(overwrite: bool, sync_terms: bool):
     """
-    Upload local translations to poeditor
+    Upload local translations to POEditor
     """
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pushing {name} translations...", nl=False)
-        for language, path in project['terms'].items():
+        for n, (language, path) in enumerate(project['terms'].items()):
+            if n:
+                sleep(30)
+            echo(f' {language}', nl=False)
             client.update_terms_translations(
                 project['id'],
                 path,
@@ -55,13 +59,15 @@ def push_translations(overwrite: bool, sync_terms: bool):
                 overwrite=overwrite,
                 sync_terms=sync_terms,
             )
+            echo('✔', nl=False)
+        echo('')
 
 
 @poeditor.command('pull')
 @argument('filters', type=Choice(POEditorAPI.FILTER_BY), required=False, nargs=-1)
 def pull_translations(filters: Sequence[str]):
     """
-    Download translated strings
+    Download translated strings from POEditor
     """
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
