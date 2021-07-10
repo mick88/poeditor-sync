@@ -1,4 +1,4 @@
-Version 0.3:
+Version 0.2.1:
 - Added 30s delay between file uploads
 
 Version 0.2:
