@@ -8,3 +8,5 @@ pyvenv.cfg
 *.egg-info
 /example/*.po
 /example/*.xml
+/dist/
+/build/
