@@ -49,7 +49,7 @@ def push_translations(overwrite: bool, sync_terms: bool):
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pushing {name} translations...", nl=False)
-        for n, (language, path) in enumerate(project['terms'].items()):
+        for n, (language, path) in enumerate(get_project_languages(project, client)):
             if n:
                 sleep(30)
             echo(f' {language}', nl=False)
