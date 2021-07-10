@@ -76,7 +76,7 @@ def pull_translations(filters: Sequence[str]):
         for language, path in get_project_languages(project, client):
             echo(f' {language}', nl=False)
             directories = os.path.dirname(path)
-            if directories:
+            if directories and not os.path.exists(directories):
                 os.makedirs(directories)
             client.export(
                 project['id'],
