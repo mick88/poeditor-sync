@@ -3,6 +3,7 @@ projects:
   - id: 458528
     format: po
     default_language: en
+    terms_path: locale/{language_code}/translation.po
     terms:
       en: en.po
       pl: pl.po

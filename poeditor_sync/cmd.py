@@ -5,7 +5,7 @@ from typing import Sequence
 from click import option, echo, group, argument, File, Choice, STRING
 from poeditor.client import POEditorAPI
 
-from poeditor_sync.sync import get_client, get_config
+from poeditor_sync.sync import get_client, get_config, get_project_languages
 
 
 @group()
@@ -73,9 +73,11 @@ def pull_translations(filters: Sequence[str]):
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pulling {name} translations...", nl=False)
         file_type = project['format']
-        for language, path in project['terms'].items():
+        for language, path in get_project_languages(project, client):
             echo(f' {language}', nl=False)
-            os.makedirs(os.path.dirname(path))
+            directories = os.path.dirname(path)
+            if directories:
+                os.makedirs(directories)
             client.export(
                 project['id'],
                 language_code=language,

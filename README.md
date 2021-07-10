@@ -28,6 +28,9 @@ projects:
   - id: 12345
     format: po
     default_language: en
+    # generic path to translation file
+    terms_path: locale/{language_code}/LC_MESSAGES/django.po
+    # alternatively, specify per-language path
     terms:
       en: locale/en/LC_MESSAGES/django.po
       pl: locale/pl/LC_MESSAGES/django.po

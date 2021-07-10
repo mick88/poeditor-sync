@@ -1,5 +1,6 @@
 Upcoming version:
 - the script will create directories to the downloaded translations if path does not exist
+- define a single templated path for all languages #1
 
 Version 0.2.1:
 - Added 30s delay between file uploads
