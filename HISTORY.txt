@@ -1,5 +1,7 @@
 Upcoming version:
 - the script will create directories to the downloaded translations if path does not exist
+- define a single templated path for all languages #1
+- the script will now read a list languages from POEditor service instead of relying on local list of languages from terms dictionary
 
 Version 0.2.1:
 - Added 30s delay between file uploads
