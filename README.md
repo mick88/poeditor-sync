@@ -1,4 +1,6 @@
 # POEditor sync
+![Tests](https://github.com/mick88/poeditor-sync/actions/workflows/python-test.yml/badge.svg?branch=master)
+
 A commandline tool for synchronizing your project's translation with [POEditor](https://poeditor.com/)
 
 ## Installation
