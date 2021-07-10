@@ -1,3 +1,4 @@
+import os
 from time import sleep
 from typing import Sequence
 
@@ -74,6 +75,7 @@ def pull_translations(filters: Sequence[str]):
         file_type = project['format']
         for language, path in project['terms'].items():
             echo(f' {language}', nl=False)
+            os.makedirs(os.path.dirname(path))
             client.export(
                 project['id'],
                 language_code=language,
