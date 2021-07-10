@@ -4,5 +4,5 @@ projects:
     format: po
     default_language: en
     terms:
-      pl: pl.po
       en: en.po
+      pl: pl.po
