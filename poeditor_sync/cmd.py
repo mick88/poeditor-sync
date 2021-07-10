@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from click import option, echo, group, argument, File, Choice, STRING
 from poeditor.client import POEditorAPI
 
@@ -57,7 +59,7 @@ def push_translations(overwrite: bool, sync_terms: bool):
 
 @poeditor.command('pull')
 @argument('filters', type=Choice(POEditorAPI.FILTER_BY), required=False, nargs=-1)
-def pull_translations(filters: tuple[str]):
+def pull_translations(filters: Sequence[str]):
     """
     Download translated strings
     """
