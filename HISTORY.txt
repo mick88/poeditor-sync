@@ -1,0 +1,7 @@
+Version 0.3:
+- Added 30s delay between file uploads
+
+Version 0.2:
+- Implemented push, pull, push-terms commands
+- Added token authentication
+- support for config file
