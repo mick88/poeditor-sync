@@ -41,7 +41,7 @@ You can use a separate token for uploads and pass it using `--token` option or `
 
 ### Options
 
-| Option          | environment variable   | default value | documentation |
-|-----------------|------------------------|---------------|---------------|
-| `--token`       | `POEDITOR_TOKEN`       |               | Authentication token for POEditor
-| `--config-file` | `POEDITOR_CONFIG_FILE` | poeditor.yml  | Path to the project config file
+| Option          | environment variable   | default value                 | documentation |
+|-----------------|------------------------|-------------------------------|---------------|
+| `--token`       | `POEDITOR_TOKEN`       | _api_token from config file_  | Authentication token for POEditor. Overrides value from config file.
+| `--config-file` | `POEDITOR_CONFIG_FILE` | poeditor.yml                  | Path to the project config file in yaml format
