@@ -10,6 +10,7 @@ class CmdReadOnlyTokenTest(TestCase):
         super().setUp()
         self.runner = CliRunner(env={
             'POEDITOR_CONFIG_FILE': 'tests/test.yml',
+            'POEDITOR_TOKEN': 'e1fc095d70eba2395fec56c6ad9e61c3',
         })
 
     def test_poeditor(self):
@@ -28,3 +29,11 @@ class CmdReadOnlyTokenTest(TestCase):
     def test_poeditor_push_terms(self):
         result: Result = self.runner.invoke(poeditor, 'push')
         self.assertEqual(result.exit_code, 1)
+
+    def test_poeditor_init_blank(self):
+        result: Result = self.runner.invoke(poeditor, args=['--config-file', 'test_blank_init.yml', 'init'])
+        self.assertEqual(result.exit_code, 0, result.stdout)
+
+    def test_poeditor_init_project_id(self):
+        result: Result = self.runner.invoke(poeditor, args=['--config-file', 'test_init_projectid.yml', 'init', '458528'])
+        self.assertEqual(result.exit_code, 0, result.stdout)

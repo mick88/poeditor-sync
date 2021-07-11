@@ -23,7 +23,7 @@ def poeditor(context: Context, config_file: Path, token: str):
     else:
         # Create blank config if it does not exist
         config = {'projects': ()}
-    client = get_client(token or config['api_token'])
+    client = get_client(token or config.get('api_token'))
     context.obj = State(client, config, config_file)
 
 
