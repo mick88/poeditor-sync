@@ -14,6 +14,8 @@ pip install poeditor-sync
 ```shell
 # generate config file
 poeditor init {project-id}
+# List projects and their translation languages
+poeditor project-details
 # download translations
 poeditor pull
 # Upload local translations to poeditor
