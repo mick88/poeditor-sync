@@ -158,9 +158,22 @@ def init(obj: State, project_ids: Sequence[int]):
                 for language in obj.client.list_project_languages(project_id)
             },
         })
+    if not project_ids:
+        config['projects'].append({
+            'id': '',
+            'format': f"Choose format: " + ', '.join(POEditorAPI.FILE_TYPES),
+            'terms_path': '',
+            'terms': {'en': '', 'es': ''},
+        })
+
     with open(obj.config_path, 'w') as yaml_file:
         yaml.dump(config, yaml_file)
-    echo(f"Created file '{obj.config_path}' initialized with project config. Please edit the file and fill in correct file format and translation paths.")
+    echo(f"""Created file '{obj.config_path}' initialized with project config.
+Please edit the file and fill in correct file format and translation paths:
+- format: The following formats are supported: {', '.join(POEditorAPI.FILE_TYPES)}
+- terms_path: file path template for translation files
+- terms: optionally, specify a separate path for each language (overrides terms_path)
+For more information about configuration visit https://github.com/mick88/poeditor-sync/blob/master/README.md#configuration""")
 
 
 if __name__ == '__main__':
