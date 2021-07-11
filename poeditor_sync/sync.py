@@ -1,18 +1,17 @@
 import warnings
+from pathlib import Path
 from typing import Tuple, Iterator
 
 import yaml
 from poeditor.client import POEditorAPI
 
 
-def get_config(config_file) -> dict:
-    config = yaml.safe_load(config_file)
-    return config
+def get_config(config_file: Path) -> dict:
+    with open(config_file) as yaml_file:
+        return yaml.safe_load(yaml_file)
 
 
-def get_client(config: dict, token=None) -> POEditorAPI:
-    if not token:
-        token = config['api_token']
+def get_client(token=None) -> POEditorAPI:
     return POEditorAPI(token)
 
 
