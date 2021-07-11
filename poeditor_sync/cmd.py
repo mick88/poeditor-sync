@@ -29,14 +29,12 @@ def poeditor(context: Context, config_file: Path, token: str):
 
 @poeditor.command('push-terms')
 @option('--reference-language', default=None, help="Language that has the complete list of terms to update. Defaults to project's reference language")
-@argument('overwrite', default=False)
-@argument('sync-terms', default=False)
+@option('--overwrite', default=False, is_flag=True, help='Whether translations should be overwritten')
+@option('--sync-terms', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
 @pass_obj
 def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms: bool):
     """
     Uploads list of terms in your local project to POEditor.
-    overwrite - Whether translations should be overwritten
-    sync-terms - Whether to delete terms that are not present in pushed language
     """
     config = obj.config
     client = obj.client
@@ -59,8 +57,8 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
 
 
 @poeditor.command('push')
-@argument('overwrite', default=False)
-@argument('sync-terms', default=False)
+@option('--overwrite', default=False, is_flag=True, help='Whether translations should be overwritten')
+@option('--sync-terms', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
 @pass_obj
 def push_translations(obj: State, overwrite: bool, sync_terms: bool):
     """
