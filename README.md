@@ -2,7 +2,9 @@
 ![Tests](https://github.com/mick88/poeditor-sync/actions/workflows/python-test.yml/badge.svg?branch=master)
 [![poeditor-sync](https://badge.fury.io/py/poeditor-sync.svg)](https://badge.fury.io/py/poeditor-sync)
 
-A commandline tool for synchronizing your project's translation with [POEditor](https://poeditor.com/)
+A commandline tool for synchronizing your project's translation with [POEditor](https://poeditor.com/).
+
+The script uses [Click](https://pypi.org/project/click/) library to wrap [POEditor API client](https://pypi.org/project/poeditor/) into a commandline tool that can be used manually or inside shell scripts.
 
 ## Installation
 ```shell
