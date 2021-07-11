@@ -142,6 +142,8 @@ def init(obj: State, project_ids: Sequence[int]):
     """
     Creates a config file for given project ids
     """
+    if obj.config_path.exists():
+        raise Exception(f"Config file {obj.config_path} already exists")
     config = {
         'api_token': '',
         'projects': [],
