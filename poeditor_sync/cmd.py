@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 from time import sleep
 from typing import Sequence
 
-from click import option, echo, group, argument, File, Choice, STRING, pass_context, Context, pass_obj
+import click
+from click import option, echo, group, argument, Choice, STRING, pass_context, Context, pass_obj
 from poeditor.client import POEditorAPI
 
 from poeditor_sync.models import State
@@ -10,12 +12,17 @@ from poeditor_sync.sync import get_client, get_config, get_project_languages
 
 
 @group()
-@option('--config-file', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=File(), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
+@option('--config-file', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=click.Path(path_type=Path), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
 @option('--token', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
 @pass_context
-def poeditor(context: Context, config_file, token):
-    config = get_config(config_file)
-    client = get_client(config, token)
+def poeditor(context: Context, config_file: Path, token: str):
+    if config_file.exists():
+        config = get_config(config_file)
+        token = token or config['api_token']
+    else:
+        # Create blank config if it does not exist
+        config = {'projects': ()}
+    client = get_client(token or config['api_token'])
     context.obj = State(client, config)
 
 
