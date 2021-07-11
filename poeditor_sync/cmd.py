@@ -13,8 +13,8 @@ from poeditor_sync.sync import get_client, get_config, get_project_languages
 
 
 @group()
-@option('--config-file', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=click.Path(path_type=Path), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
-@option('--token', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
+@option('--config-file', '-f', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=click.Path(path_type=Path), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
+@option('--token', '-t', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
 @pass_context
 def poeditor(context: Context, config_file: Path, token: str):
     if config_file.exists():
@@ -28,9 +28,9 @@ def poeditor(context: Context, config_file: Path, token: str):
 
 
 @poeditor.command('push-terms')
-@option('--reference-language', default=None, help="Language that has the complete list of terms to update. Defaults to project's reference language")
-@option('--overwrite', default=False, is_flag=True, help='Whether translations should be overwritten')
-@option('--sync-terms', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
+@option('--reference-language', '-l', default=None, help="Language that has the complete list of terms to update. Defaults to project's reference language")
+@option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
+@option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
 @pass_obj
 def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms: bool):
     """
@@ -57,8 +57,8 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
 
 
 @poeditor.command('push')
-@option('--overwrite', default=False, is_flag=True, help='Whether translations should be overwritten')
-@option('--sync-terms', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
+@option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
+@option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
 @pass_obj
 def push_translations(obj: State, overwrite: bool, sync_terms: bool):
     """
