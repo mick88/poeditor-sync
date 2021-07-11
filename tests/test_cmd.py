@@ -9,7 +9,7 @@ class CmdReadOnlyTokenTest(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.runner = CliRunner(env={
-            'POEDITOR_CONFIG_FILE': 'test.yml',
+            'POEDITOR_CONFIG_FILE': 'tests/test.yml',
         })
 
     def test_poeditor(self):
