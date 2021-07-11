@@ -149,11 +149,9 @@ def init(obj: State, project_ids: Sequence[int]):
         'projects': [],
     }
     for project_id in project_ids:
-        details = obj.client.view_project_details(project_id)
         config['projects'].append({
             'id': project_id,
-            'name': details['name'],
-            'format': f"Choose format: " + ', '.join(POEditorAPI.FILE_TYPES),
+            'format': 'po',
             'terms_path': "Example: locales/{language_code}.po",
             'terms': {
                 language['code']: ''
@@ -163,7 +161,7 @@ def init(obj: State, project_ids: Sequence[int]):
     if not project_ids:
         config['projects'].append({
             'id': '',
-            'format': f"Choose format: " + ', '.join(POEditorAPI.FILE_TYPES),
+            'format': 'po',
             'terms_path': '',
             'terms': {'en': '', 'es': ''},
         })
