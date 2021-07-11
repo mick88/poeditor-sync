@@ -2,7 +2,7 @@ import os
 from time import sleep
 from typing import Sequence
 
-from click import option, echo, group, argument, File, Choice, STRING
+from click import option, echo, group, argument, File, Choice, STRING, pass_context, Context, pass_obj
 from poeditor.client import POEditorAPI
 
 from poeditor_sync.sync import get_client, get_config, get_project_languages
@@ -11,22 +11,29 @@ from poeditor_sync.sync import get_client, get_config, get_project_languages
 @group()
 @option('--config-file', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=File(), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
 @option('--token', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
-def poeditor(config_file, token):
-    global client, config
+@pass_context
+def poeditor(context: Context, config_file, token):
+    context.ensure_object(dict)
     config = get_config(config_file)
-    client = get_client(config, token)
+    context.obj.update(
+        config=config,
+        client=get_client(config, token),
+    )
 
 
 @poeditor.command('push-terms')
 @option('--reference-language', default=None, help="Language that has the complete list of terms to update. Defaults to project's reference language")
 @argument('overwrite', default=False)
 @argument('sync-terms', default=False)
-def push_terms(reference_language: str, overwrite: bool, sync_terms: bool):
+@pass_obj
+def push_terms(obj, reference_language: str, overwrite: bool, sync_terms: bool):
     """
     Uploads list of terms in your local project to POEditor.
     overwrite - Whether translations should be overwritten
     sync-terms - Whether to delete terms that are not present in pushed language
     """
+    config = obj['config']
+    client = obj['client']
     for project in config['projects']:
         if not reference_language:
             project_details = client.view_project_details(project['id'])
@@ -47,10 +54,13 @@ def push_terms(reference_language: str, overwrite: bool, sync_terms: bool):
 @poeditor.command('push')
 @argument('overwrite', default=False)
 @argument('sync-terms', default=False)
-def push_translations(overwrite: bool, sync_terms: bool):
+@pass_obj
+def push_translations(obj, overwrite: bool, sync_terms: bool):
     """
     Upload local translations to POEditor
     """
+    config = obj['config']
+    client = obj['client']
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pushing {name} translations...", nl=False)
@@ -70,10 +80,13 @@ def push_translations(overwrite: bool, sync_terms: bool):
 
 @poeditor.command('pull')
 @argument('filters', type=Choice(POEditorAPI.FILTER_BY), required=False, nargs=-1)
-def pull_translations(filters: Sequence[str]):
+@pass_obj
+def pull_translations(obj, filters: Sequence[str]):
     """
     Download translated strings from POEditor
     """
+    config = obj['config']
+    client = obj['client']
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pulling {name} translations...", nl=False)
@@ -94,11 +107,14 @@ def pull_translations(filters: Sequence[str]):
 
 
 @poeditor.command('project-details')
-def project_details():
+@pass_obj
+def project_details(obj):
     """
     Shows details of POEditor projects defined in config
     :return:
     """
+    config = obj['config']
+    client = obj['client']
     for project in config['projects']:
         project_id = project['id']
         echo(f"- Project: {project_id}")
