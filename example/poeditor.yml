@@ -2,7 +2,6 @@ api_token: e1fc095d70eba2395fec56c6ad9e61c3
 projects:
   - id: 458528
     format: po
-    default_language: en
     terms_path: locale/{language_code}/translation.po
     terms:
       en: en.po

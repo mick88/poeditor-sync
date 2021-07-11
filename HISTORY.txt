@@ -3,6 +3,7 @@ Upcoming version:
 - define a single templated path for all languages #1
 - the script will now read a list languages from POEditor service instead of relying on local list of languages from terms dictionary
 - project-details command
+- removed default_language config. The script will use reference language defined in project
 
 Version 0.2.1:
 - Added 30s delay between file uploads

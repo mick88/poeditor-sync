@@ -27,7 +27,6 @@ api_token: ABC123...
 projects:
   - id: 12345
     format: po
-    default_language: en
     # generic path to translation file
     terms_path: locale/{language_code}/LC_MESSAGES/django.po
     # alternatively, specify per-language path
@@ -36,7 +35,6 @@ projects:
       pl: locale/pl/LC_MESSAGES/django.po
   - id: 54321
     format: po
-    default_language: en
     terms_path: locale/{language_code}/LC_MESSAGES/djangojs.po
     terms:
       en: locale/en/LC_MESSAGES/djangojs.po

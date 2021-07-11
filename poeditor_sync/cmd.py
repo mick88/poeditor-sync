@@ -18,25 +18,30 @@ def poeditor(config_file, token):
 
 
 @poeditor.command('push-terms')
-@option('--language-code', default=None, help="Select language that has the complete list of terms to update")
+@option('--reference-language', default=None, help="Language that has the complete list of terms to update. Defaults to project's reference language")
 @argument('overwrite', default=False)
 @argument('sync-terms', default=False)
-def push_terms(language_code: str, overwrite: bool, sync_terms: bool):
+def push_terms(reference_language: str, overwrite: bool, sync_terms: bool):
     """
     Uploads list of terms in your local project to POEditor.
     overwrite - Whether translations should be overwritten
     sync-terms - Whether to delete terms that are not present in pushed language
     """
     for project in config['projects']:
-        language = language_code or project.get('default_language', 'en')
+        if not reference_language:
+            project_details = client.view_project_details(project['id'])
+            reference_language = project_details.get('reference_language')
+            if not reference_language:
+                raise ValueError(f"project {project_details['name']} does not define reference language. Please pass --reference-language option to select which language to use.")
         name = client.view_project_details(project_id=project['id']).get('name')
-        echo(f"Pushing terms to {name}")
+        echo(f"Pushing terms to {name} using '{reference_language}'...", nl=False)
         client.update_terms(
             project_id=project['id'],
-            file_path=project['terms'][language],
+            file_path=project['terms'][reference_language],
             sync_terms=sync_terms,
             overwrite=overwrite,
         )
+        echo('done!')
 
 
 @poeditor.command('push')
