@@ -88,5 +88,24 @@ def pull_translations(filters: Sequence[str]):
         echo('')
 
 
+@poeditor.command('project-details')
+def project_details():
+    """
+    Shows details of POEditor projects defined in config
+    :return:
+    """
+    for project in config['projects']:
+        project_id = project['id']
+        echo(f"- Project: {project_id}")
+        details = client.view_project_details(project_id=project_id)
+        for key, value in details.items():
+            echo(f"  {key}: {value}")
+        echo(f"  Languages:")
+        for language in client.list_project_languages(project_id=project_id):
+            name = language.pop('name')
+            lang_details = ', '.join(f"{k}={v}" for k, v in language.items())
+            echo(f"  - {name}: {lang_details}")
+
+
 if __name__ == '__main__':
     poeditor()
