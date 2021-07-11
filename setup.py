@@ -8,13 +8,19 @@ except:
 
 setup(
     name='poeditor-sync',
-    version='0.2.1',
+    version='0.3',
     packages=['poeditor_sync'],
     py_modules=['cmd'],
     entry_points={
         'console_scripts': ['poeditor = poeditor_sync.cmd:poeditor'],
     },
     url='https://github.com/mick88/poeditor-sync',
+    project_urls={
+        'Changelog': 'https://github.com/mick88/poeditor-sync/blob/master/HISTORY.txt',
+        'Issue tracker': 'https://github.com/mick88/poeditor-sync/issues',
+        'Example configuration': 'https://github.com/mick88/poeditor-sync/blob/master/example/poeditor.yml',
+        'POEditor': 'https://poeditor.com/',
+    },
     license='MIT',
     author='Michal Dabski',
     author_email='contact@michaldabski.com',
