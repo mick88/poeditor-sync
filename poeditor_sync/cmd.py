@@ -4,7 +4,8 @@ from time import sleep
 from typing import Sequence
 
 import click
-from click import option, echo, group, argument, Choice, STRING, pass_context, Context, pass_obj
+import yaml
+from click import option, echo, group, argument, Choice, STRING, pass_context, Context, pass_obj, INT
 from poeditor.client import POEditorAPI
 
 from poeditor_sync.models import State
@@ -23,7 +24,7 @@ def poeditor(context: Context, config_file: Path, token: str):
         # Create blank config if it does not exist
         config = {'projects': ()}
     client = get_client(token or config['api_token'])
-    context.obj = State(client, config)
+    context.obj = State(client, config, config_file)
 
 
 @poeditor.command('push-terms')
@@ -132,6 +133,34 @@ def project_details(obj: State):
             name = language.pop('name')
             lang_details = ', '.join(f"{k}={v}" for k, v in language.items())
             echo(f"  - {name}: {lang_details}")
+
+
+@poeditor.command('init')
+@argument('project_ids', nargs=-1, type=INT)
+@pass_obj
+def init(obj: State, project_ids: Sequence[int]):
+    """
+    Creates a config file for given project ids
+    """
+    config = {
+        'api_token': '',
+        'projects': [],
+    }
+    for project_id in project_ids:
+        details = obj.client.view_project_details(project_id)
+        config['projects'].append({
+            'id': project_id,
+            'name': details['name'],
+            'format': f"Choose format: " + ', '.join(POEditorAPI.FILE_TYPES),
+            'terms_path': "Example: locales/{language_code}.po",
+            'terms': {
+                language['code']: ''
+                for language in obj.client.list_project_languages(project_id)
+            },
+        })
+    with open(obj.config_path, 'w') as yaml_file:
+        yaml.dump(config, yaml_file)
+    echo(f"Created file '{obj.config_path}' initialized with project config. Please edit the file and fill in correct file format and translation paths.")
 
 
 if __name__ == '__main__':
