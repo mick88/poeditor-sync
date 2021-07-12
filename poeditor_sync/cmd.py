@@ -47,9 +47,13 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
                 raise ValueError(f"project {project_details['name']} does not define reference language. Please pass --reference-language option to select which language to use.")
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pushing terms to {name} using '{reference_language}'...", nl=False)
+        try:
+            translation_file = project['terms'][reference_language]
+        except KeyError:
+            translation_file = project['terms_path'].format(language_code=reference_language)
         client.update_terms(
             project_id=project['id'],
-            file_path=project['terms'][reference_language],
+            file_path=translation_file,
             sync_terms=sync_terms,
             overwrite=overwrite,
         )
