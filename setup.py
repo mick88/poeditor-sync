@@ -19,7 +19,7 @@ setup(
     author='Michal Dabski',
     author_email='contact@michaldabski.com',
     install_requires=[
-        'click',
+        'click>=8',
         'poeditor',
         'pyyaml',
     ],
