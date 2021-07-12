@@ -1,3 +1,7 @@
+Version 0.3.1:
+- pin down version of click to fix file path parsing
+- fix push-terms command for when translation files are defined using generic terms_path
+
 Version 0.3:
 - the script will create directories to the downloaded translations if path does not exist
 - define a single templated path for all languages #1
