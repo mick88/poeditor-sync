@@ -1,3 +1,6 @@
+Upcoming version:
+- added delay between project in push-terms command to avoid rate limit error
+
 Version 0.3.1:
 - pin down version of click to fix file path parsing
 - fix push-terms command for when translation files are defined using generic terms_path

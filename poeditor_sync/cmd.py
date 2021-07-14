@@ -39,7 +39,7 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
     config = obj.config
     client = obj.client
 
-    for project in config['projects']:
+    for n, project in enumerate(config['projects']):
         if not reference_language:
             project_details = client.view_project_details(project['id'])
             reference_language = project_details.get('reference_language')
@@ -51,6 +51,8 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
             translation_file = project['terms'][reference_language]
         except KeyError:
             translation_file = project['terms_path'].format(language_code=reference_language)
+        if n:
+            sleep(30)
         client.update_terms(
             project_id=project['id'],
             file_path=translation_file,
