@@ -77,7 +77,7 @@ def push_translations(obj: State, overwrite: bool, sync_terms: bool):
         echo(f"Pushing {name} translations...", nl=False)
         for n, (language, path) in enumerate(get_project_languages(project, client)):
             if n:
-                sleep(30)
+                sleep(31)
             echo(f' {language}', nl=False)
             client.update_terms_translations(
                 project['id'],
