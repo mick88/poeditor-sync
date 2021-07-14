@@ -36,6 +36,9 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
     """
     Uploads list of terms in your local project to POEditor.
     """
+    if not obj.config_path.exists():
+        raise Exception(f'Config file {obj.config_path} does not exist')
+
     config = obj.config
     client = obj.client
 
@@ -70,6 +73,8 @@ def push_translations(obj: State, overwrite: bool, sync_terms: bool):
     """
     Upload local translations to POEditor
     """
+    if not obj.config_path.exists():
+        raise Exception(f'Config file {obj.config_path} does not exist')
     config = obj.config
     client = obj.client
     for project in config['projects']:
@@ -96,6 +101,8 @@ def pull_translations(obj: State, filters: Sequence[str]):
     """
     Download translated strings from POEditor
     """
+    if not obj.config_path.exists():
+        raise Exception(f'Config file {obj.config_path} does not exist')
     config = obj.config
     client = obj.client
     for project in config['projects']:
@@ -124,6 +131,8 @@ def project_details(obj: State):
     Shows details of POEditor projects defined in config
     :return:
     """
+    if not obj.config_path.exists():
+        raise Exception(f'Config file {obj.config_path} does not exist')
     config = obj.config
     client = obj.client
     for project in config['projects']:
