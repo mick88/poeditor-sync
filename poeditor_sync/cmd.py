@@ -5,19 +5,18 @@ from typing import Sequence
 
 import click
 import yaml
-from click import option, echo, group, argument, Choice, STRING, pass_context, Context, pass_obj, INT, FileError
 from poeditor.client import POEditorAPI
 
 from poeditor_sync.models import State
 from poeditor_sync.sync import get_client, get_config, get_project_languages
 
 
-@group()
-@option('--config-file', '-f', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=click.Path(path_type=Path), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
-@option('--token', '-t', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
-@option('--language', '-l', envvar='POEDITOR_LANGUAGE', type=STRING, help="Only push/pull this language", multiple=True)
-@pass_context
-def poeditor(context: Context, config_file: Path, token: str, language: Sequence[str]):
+@click.group()
+@click.option('--config-file', '-f', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=click.Path(path_type=Path), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
+@click.option('--token', '-t', envvar='POEDITOR_TOKEN', type=click.STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
+@click.option('--language', '-l', envvar='POEDITOR_LANGUAGE', type=click.STRING, help="Only push/pull this language", multiple=True)
+@click.pass_context
+def poeditor(context: click.Context, config_file: Path, token: str, language: Sequence[str]):
     if config_file.exists():
         config = get_config(config_file)
         token = token or config['api_token']
@@ -29,15 +28,15 @@ def poeditor(context: Context, config_file: Path, token: str, language: Sequence
 
 
 @poeditor.command('push-terms')
-@option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
-@option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
-@pass_obj
+@click.option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
+@click.option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
+@click.pass_obj
 def push_terms(obj: State, overwrite: bool, sync_terms: bool):
     """
     Uploads list of terms in your local project to POEditor.
     """
     if not obj.config_path.exists():
-        raise FileError(obj.config_path.name, 'Config file does not exist')
+        raise click.FileError(obj.config_path.name, 'Config file does not exist')
 
     config = obj.config
     client = obj.client
@@ -50,7 +49,7 @@ def push_terms(obj: State, overwrite: bool, sync_terms: bool):
             if not reference_language:
                 raise ValueError(f"project {project_details['name']} does not define reference language. Please pass --reference-language option to select which language to use.")
         name = client.view_project_details(project_id=project['id']).get('name')
-        echo(f"Pushing terms to {name} using '{reference_language}'...", nl=False)
+        click.echo(f"Pushing terms to {name} using '{reference_language}'...", nl=False)
         try:
             translation_file = project['terms'][reference_language]
         except KeyError:
@@ -63,28 +62,28 @@ def push_terms(obj: State, overwrite: bool, sync_terms: bool):
             sync_terms=sync_terms,
             overwrite=overwrite,
         )
-        echo('done!')
+        click.echo('done!')
 
 
 @poeditor.command('push')
-@option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
-@option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
-@pass_obj
+@click.option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
+@click.option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
+@click.pass_obj
 def push_translations(obj: State, overwrite: bool, sync_terms: bool):
     """
     Upload local translations to POEditor
     """
     if not obj.config_path.exists():
-        raise FileError(obj.config_path.name, 'Config file does not exist')
+        raise click.FileError(obj.config_path.name, 'Config file does not exist')
     config = obj.config
     client = obj.client
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
-        echo(f"Pushing {name} translations...", nl=False)
+        click.echo(f"Pushing {name} translations...", nl=False)
         for n, (language, path) in enumerate(get_project_languages(project, client, obj.languages)):
             if n:
                 sleep(31)
-            echo(f' {language}', nl=False)
+            click.echo(f' {language}', nl=False)
             client.update_terms_translations(
                 project['id'],
                 path,
@@ -92,26 +91,26 @@ def push_translations(obj: State, overwrite: bool, sync_terms: bool):
                 overwrite=overwrite,
                 sync_terms=sync_terms,
             )
-        echo('')
+        click.echo('')
 
 
 @poeditor.command('pull')
-@argument('filters', type=Choice(POEditorAPI.FILTER_BY), required=False, nargs=-1)
-@pass_obj
+@click.argument('filters', type=click.Choice(POEditorAPI.FILTER_BY), required=False, nargs=-1)
+@click.pass_obj
 def pull_translations(obj: State, filters: Sequence[str]):
     """
     Download translated strings from POEditor
     """
     if not obj.config_path.exists():
-        raise FileError(obj.config_path.name, 'Config file does not exist')
+        raise click.FileError(obj.config_path.name, 'Config file does not exist')
     config = obj.config
     client = obj.client
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
-        echo(f"Pulling {name} translations...", nl=False)
+        click.echo(f"Pulling {name} translations...", nl=False)
         file_type = project['format']
         for language, path in get_project_languages(project, client, obj.languages):
-            echo(f' {language}', nl=False)
+            click.echo(f' {language}', nl=False)
             directories = os.path.dirname(path)
             if directories and not os.path.exists(directories):
                 os.makedirs(directories)
@@ -122,36 +121,36 @@ def pull_translations(obj: State, filters: Sequence[str]):
                 file_type=file_type,
                 filters=filters or None,
             )
-        echo('')
+        click.echo('')
 
 
 @poeditor.command('project-details')
-@pass_obj
+@click.pass_obj
 def project_details(obj: State):
     """
     Shows details of POEditor projects defined in config
     :return:
     """
     if not obj.config_path.exists():
-        raise FileError(obj.config_path.name, 'Config file does not exist')
+        raise click.FileError(obj.config_path.name, 'Config file does not exist')
     config = obj.config
     client = obj.client
     for project in config['projects']:
         project_id = project['id']
-        echo(f"- Project: {project_id}")
+        click.echo(f"- Project: {project_id}")
         details = client.view_project_details(project_id=project_id)
         for key, value in details.items():
-            echo(f"  {key}: {value}")
-        echo(f"  Languages:")
+            click.echo(f"  {key}: {value}")
+        click.echo(f"  Languages:")
         for language in client.list_project_languages(project_id=project_id):
             name = language.pop('name')
             lang_details = ', '.join(f"{k}={v}" for k, v in language.items())
-            echo(f"  - {name}: {lang_details}")
+            click.echo(f"  - {name}: {lang_details}")
 
 
 @poeditor.command('init')
-@argument('project_ids', nargs=-1, type=INT)
-@pass_obj
+@click.argument('project_ids', nargs=-1, type=click.INT)
+@click.pass_obj
 def init(obj: State, project_ids: Sequence[int]):
     """
     Creates a config file for given project ids
@@ -183,7 +182,7 @@ def init(obj: State, project_ids: Sequence[int]):
 
     with open(obj.config_path, 'w') as yaml_file:
         yaml.dump(config, yaml_file)
-    echo(f"""Created file '{obj.config_path}' initialized with project config.
+    click.echo(f"""Created file '{obj.config_path}' initialized with project config.
 Please edit the file and fill in correct file format and translation paths:
 - format: The following formats are supported: {', '.join(POEditorAPI.FILE_TYPES)}
 - terms_path: file path template for translation files
