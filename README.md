@@ -1,5 +1,5 @@
 # POEditor sync
-![Tests](https://github.com/mick88/poeditor-sync/actions/workflows/python-test.yml/badge.svg?branch=master)
+[![Tests](https://github.com/mick88/poeditor-sync/actions/workflows/python-test.yml/badge.svg?branch=master)](https://github.com/mick88/poeditor-sync/actions)
 [![poeditor-sync](https://badge.fury.io/py/poeditor-sync.svg)](https://badge.fury.io/py/poeditor-sync)
 
 A commandline tool for synchronizing your project's translation with [POEditor](https://poeditor.com/).
