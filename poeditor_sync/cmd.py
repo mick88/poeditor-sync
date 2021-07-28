@@ -173,11 +173,12 @@ def init(obj: State, project_ids: Sequence[int]):
             },
         })
     if not project_ids:
+        languages = obj.languages or ('en', 'es')
         config['projects'].append({
             'id': '',
             'format': 'po',
             'terms_path': '',
-            'terms': {'en': '', 'es': ''},
+            'terms': {code: '' for code in languages},
         })
 
     with open(obj.config_path, 'w') as yaml_file:
