@@ -1,3 +1,6 @@
+Development:
+- add --language option to allow limiting which languages will be used in push/pull command
+
 Version 0.3.2:
 - added delay between project in push-terms command to avoid rate limit error
 - raise Exceptions when running push/pull/info commands without valid config file

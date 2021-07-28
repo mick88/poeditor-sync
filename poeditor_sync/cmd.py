@@ -15,8 +15,9 @@ from poeditor_sync.sync import get_client, get_config, get_project_languages
 @group()
 @option('--config-file', '-f', envvar='POEDITOR_CONFIG_FILE', default='poeditor.yml', type=click.Path(path_type=Path), help='Path to the project config file. You can also set environment variable POEDITOR_CONFIG_FILE')
 @option('--token', '-t', envvar='POEDITOR_TOKEN', type=STRING, help="API token for POEditor. You can generate it at https://poeditor.com/account/api. You can also set environment variable POEDITOR_TOKEN.")
+@option('--language', '-l', envvar='POEDITOR_LANGUAGE', type=STRING, help="Only push/pull this language", multiple=True)
 @pass_context
-def poeditor(context: Context, config_file: Path, token: str):
+def poeditor(context: Context, config_file: Path, token: str, language: Sequence[str]):
     if config_file.exists():
         config = get_config(config_file)
         token = token or config['api_token']
@@ -24,15 +25,14 @@ def poeditor(context: Context, config_file: Path, token: str):
         # Create blank config if it does not exist
         config = {'projects': ()}
     client = get_client(token or config.get('api_token'))
-    context.obj = State(client, config, config_file)
+    context.obj = State(client, config, config_file, tuple(language))
 
 
 @poeditor.command('push-terms')
-@option('--reference-language', '-l', default=None, help="Language that has the complete list of terms to update. Defaults to project's reference language")
 @option('--overwrite', '-o', default=False, is_flag=True, help='Whether translations should be overwritten')
 @option('--sync-terms', '-s', default=False, is_flag=True, help='Whether to delete terms that are not present in pushed language')
 @pass_obj
-def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms: bool):
+def push_terms(obj: State, overwrite: bool, sync_terms: bool):
     """
     Uploads list of terms in your local project to POEditor.
     """
@@ -41,6 +41,7 @@ def push_terms(obj: State, reference_language: str, overwrite: bool, sync_terms:
 
     config = obj.config
     client = obj.client
+    reference_language = obj.language
 
     for n, project in enumerate(config['projects']):
         if not reference_language:
@@ -80,7 +81,7 @@ def push_translations(obj: State, overwrite: bool, sync_terms: bool):
     for project in config['projects']:
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pushing {name} translations...", nl=False)
-        for n, (language, path) in enumerate(get_project_languages(project, client)):
+        for n, (language, path) in enumerate(get_project_languages(project, client, obj.languages)):
             if n:
                 sleep(31)
             echo(f' {language}', nl=False)
@@ -109,7 +110,7 @@ def pull_translations(obj: State, filters: Sequence[str]):
         name = client.view_project_details(project_id=project['id']).get('name')
         echo(f"Pulling {name} translations...", nl=False)
         file_type = project['format']
-        for language, path in get_project_languages(project, client):
+        for language, path in get_project_languages(project, client, obj.languages):
             echo(f' {language}', nl=False)
             directories = os.path.dirname(path)
             if directories and not os.path.exists(directories):

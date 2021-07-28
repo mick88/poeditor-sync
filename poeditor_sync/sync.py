@@ -1,6 +1,6 @@
 import warnings
 from pathlib import Path
-from typing import Tuple, Iterator
+from typing import Tuple, Iterator, Sequence
 
 import yaml
 from poeditor.client import POEditorAPI
@@ -15,9 +15,11 @@ def get_client(token=None) -> POEditorAPI:
     return POEditorAPI(token)
 
 
-def get_project_languages(project: dict, client: POEditorAPI) -> Iterator[Tuple[str, str]]:
+def get_project_languages(project: dict, client: POEditorAPI, languages: Sequence[str] = ()) -> Iterator[Tuple[str, str]]:
     for language in client.list_project_languages(project_id=project['id']):
         language_code = language['code']
+        if languages and language_code not in languages:
+            continue
         translation_path: str
         terms = project.get('terms')
         if terms and language_code in terms:
