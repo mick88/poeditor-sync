@@ -5,7 +5,7 @@ from typing import Sequence
 
 import click
 import yaml
-from click import option, echo, group, argument, Choice, STRING, pass_context, Context, pass_obj, INT, FileError
+from click import option, echo, group, argument, Choice, STRING, pass_context, Context, pass_obj, INT, FileError, prompt
 from poeditor.client import POEditorAPI
 
 from poeditor_sync.models import State
@@ -159,7 +159,7 @@ def init(obj: State, project_ids: Sequence[int]):
     if obj.config_path.exists():
         raise Exception(f"Config file {obj.config_path} already exists")
     config = {
-        'api_token': '',
+        'api_token': obj.client.api_token or '',
         'projects': [],
     }
     for project_id in project_ids:
