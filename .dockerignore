@@ -1,0 +1,9 @@
+/.github
+/build/
+/dist/
+/Lib/
+poeditor_sync.egg-info
+/scripts/
+/.gitignore
+/.git/
+/pyvenv.cfg
