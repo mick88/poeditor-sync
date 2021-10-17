@@ -1,4 +1,4 @@
-Next Version:
+Version 0.4.1:
 - the tool will now show error message instead of crashing the script if there's an error
 - Official Python 3.10 support
 
