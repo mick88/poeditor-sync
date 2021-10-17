@@ -47,7 +47,7 @@ def push_terms(obj: State, overwrite: bool, sync_terms: bool):
             project_details = client.view_project_details(project['id'])
             reference_language = project_details.get('reference_language')
             if not reference_language:
-                raise ValueError(f"project {project_details['name']} does not define reference language. Please pass --reference-language option to select which language to use.")
+                raise click.ClickException(f"project {project_details['name']} does not define reference language. Please pass --reference-language option to select which language to use.")
         name = client.view_project_details(project_id=project['id']).get('name')
         click.echo(f"Pushing terms to {name} using '{reference_language}'...", nl=False)
         try:
