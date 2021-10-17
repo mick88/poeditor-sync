@@ -4,5 +4,3 @@ COPY poeditor_sync ./poeditor_sync
 COPY setup.py ./
 
 RUN python setup.py install
-
-ENTRYPOINT 'poeditor'
