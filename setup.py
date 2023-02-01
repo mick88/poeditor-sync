@@ -8,7 +8,7 @@ except:
 
 setup(
     name='poeditor-sync',
-    version='0.4.1',
+    version='0.5',
     packages=['poeditor_sync'],
     py_modules=['cmd'],
     entry_points={

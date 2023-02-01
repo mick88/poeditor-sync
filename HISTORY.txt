@@ -1,4 +1,4 @@
-Upcoming:
+Version 0.5:
 - Added delay between projects when pushing translations
 - Official Python 3.11 support
 - Dropped official Python 3.6 support
