@@ -1,6 +1,7 @@
 Upcoming:
 - Added delay between projects when pushing translations
 - Official Python 3.11 support
+- Dropped official Python 3.6 support
 
 Version 0.4.1:
 - the tool will now show error message instead of crashing the script if there's an error
