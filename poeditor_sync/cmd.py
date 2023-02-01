@@ -77,7 +77,9 @@ def push_translations(obj: State, overwrite: bool, sync_terms: bool):
         raise click.FileError(obj.config_path.name, 'Config file does not exist')
     config = obj.config
     client = obj.client
-    for project in config['projects']:
+    for n, project in enumerate(config['projects']):
+        if n:
+            sleep(31)
         name = client.view_project_details(project_id=project['id']).get('name')
         click.echo(f"Pushing {name} translations...", nl=False)
         for n, (language, path) in enumerate(get_project_languages(project, client, obj.languages)):
