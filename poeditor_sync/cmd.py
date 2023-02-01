@@ -131,7 +131,6 @@ def pull_translations(obj: State, filters: Sequence[str]):
 def project_details(obj: State):
     """
     Shows details of POEditor projects defined in config
-    :return:
     """
     if not obj.config_path.exists():
         raise click.FileError(obj.config_path.name, 'Config file does not exist')
