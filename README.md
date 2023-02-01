@@ -14,6 +14,8 @@ pip install poeditor-sync
 ## Usage
 ### Commands:
 ```shell
+# View usage instructions
+poeditor --help
 # generate config file
 poeditor init {project-id}
 # List projects and their translation languages
