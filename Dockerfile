@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.11
 
 COPY poeditor_sync ./poeditor_sync
 COPY setup.py ./
