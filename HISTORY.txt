@@ -1,3 +1,6 @@
+Version 0.6:
+- Added option to sort terms alphabetically in pull command
+
 Version 0.5:
 - Added delay between projects when pushing translations
 - Official Python 3.11 support
