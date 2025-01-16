@@ -109,6 +109,11 @@ def pull_translations(obj: State, filters: Sequence[str]):
         name = client.view_project_details(project_id=project['id']).get('name')
         click.echo(f"Pulling {name} translations...", nl=False)
         file_type = project['format']
+        if 'order' in project:
+            order = project['order']
+        else:
+            order = None
+
         for language, path in get_project_languages(project, client, obj.languages):
             click.echo(f' {language}', nl=False)
             directories = os.path.dirname(path)
@@ -120,6 +125,7 @@ def pull_translations(obj: State, filters: Sequence[str]):
                 local_file=path,
                 file_type=file_type,
                 filters=filters or None,
+                order=order or None,
             )
         click.echo('')
 

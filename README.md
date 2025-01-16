@@ -20,6 +20,8 @@ api_token: ABC123...
 projects:
   - id: 12345
     format: po
+    # set it to terms to order results by 'terms' alphabetically.
+    order: terms
     # generic path to translation file
     terms_path: locale/{language_code}/LC_MESSAGES/django.po
     # alternatively, specify per-language path
